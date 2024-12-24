@@ -1,0 +1,136 @@
+# action.yml
+# required permissions:
+# actions: read  # optional for extended integration
+# contents: read # required to perform the scan
+# security-events: write  # required to upload SARIF results
+---
+name: 'Flake8 Analysis'
+description: 'Flake8 SARIF Analysis Scan Action for GitHub'
+branding:
+  icon: 'code'
+  color: 'purple'
+inputs:
+  config:
+    description: 'File or glob to slurp up flake8 config from. Default is UNDEFINED.'
+    required: false
+    type: string
+    default: 'UNDEFINED'
+  match:
+    description: |
+      Glob-style pattern of files or directories to match and run flake8 on.
+      Only works with git tracked files.
+    required: false
+    type: string
+    default: '**/*.py'
+  path:
+    description: 'File or directory to run flake8 on. Default is to use git to match paths'
+    required: false
+    default: 'UNDEFINED'
+  token:
+    description: |
+      The token used to authenticate when fetching Python distributions from
+      https://github.com/actions/python-versions. When running this action on github.com,
+      the default value is sufficient. When running on GHES, you can pass a personal access
+      token for github.com if you are experiencing rate limiting.
+    default: ${{ github.server_url == 'https://github.com' && github.token || '' }}
+    required: true
+  publish-artifacts:
+    description: 'Also upload results for downloading. (Does not affect GitHub scan alerts)'
+    type: boolean
+    default: true
+    required: true
+outputs:
+  python-version:
+    description: "The python version that was used in the run."
+    value: ${{ steps.cp313.outputs.python-version || '' }}
+  artifact-id:
+    description: "The uploaded artifact-id"
+    value: ${{ steps.artifact-upload-step.outputs.artifact-id }}
+  artifact-url:
+    description: "The uploaded artifact-url"
+    value: ${{ steps.artifact-upload-step.outputs.artifact-url }}
+  artifact-digest:
+    description: "The uploaded artifact-digest"
+    value: ${{ steps.artifact-upload-step.outputs.artifact-digest }}
+
+runs:
+  using: composite
+  steps:
+    - name: "Setup Python"
+      uses: actions/setup-python@v5
+      id: cp313
+      with:
+        python-version: '3.13'
+        cache: 'pip'  # caching pip dependencies
+    - name: "Install Flake8 Scan and dependencies"
+      shell: bash
+      run: |
+        printf "%s\n" "::group::Python-Version"
+        printf "%s\n" "${{ steps.cp313.outputs.python-version }}"
+        printf "%s\n" "::endgroup::"
+        printf "%s\n" "::group:: Install flake8"
+        pip --python ${{ steps.cp313.outputs.python-path }} --no-input install -r requirements.txt ;
+        printf "%s\n" "::endgroup::"
+      if: ${{ !cancelled() }}
+
+    - name: "Get Matching Files"
+      id: shellfiles
+      env:
+        GIT_MATCH_PATTERN: ${{ (inputs.path == 'UNDEFINED') && inputs.match || '' }}
+      shell: bash
+      run: |
+        FILES=$(git ls-files --exclude-standard -- ${{ env.GIT_MATCH_PATTERN }} )
+        if [ -z "$FILES" ]; then
+          printf "%s\n" "No matching files found."
+          printf "%s\n" "files=" >> "$GITHUB_OUTPUT"
+        else
+          printf "%s\n" "Matching files found:"
+          printf "%s\n" "$FILES"
+          # Replace line breaks with spaces for GitHub Action Output
+          FILES="${FILES//$'\n'/ }"
+          printf "%s\n" "files=$FILES" >> "$GITHUB_OUTPUT"
+        fi
+      if: ${{ !cancelled() && (inputs.path == 'UNDEFINED') }}
+
+    - name: "Run Flake8 and Generate SARIF"
+      shell: bash
+      run: |
+        printf "%s\n" "::group::Flake8"
+
+        if [ "$INPUT_CONFIG" == "UNDEFINED" ]; then
+            INPUT_CONFIG=""
+        else
+            INPUT_CONFIG="--config=${INPUT_CONFIG}"
+        fi
+
+        if [ "$INPUT_PATH" == "UNDEFINED" ]; then
+            INPUT_PATHS="${{ steps.shellfiles.outputs.files }}"
+        else
+            INPUT_PATHS="${INPUT_PATH}"
+        fi
+
+        $PYTHON ${FLAKE8_TOOL} $INPUT_CONFIG ${INPUT_PATHS} --output flake8.sarif
+        printf "%s\n" "::endgroup::"
+      env:
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_CONFIG: ${{ inputs.config }}
+        PYTHON: ${{ steps.cp313.outputs.python-path }}
+        FLAKE8_TOOL: "${{ github.action_path }}/bin/Flake8LintCLI.py"
+      if: ${{ !cancelled() }}
+
+    - name: "Upload artifact"
+      uses: actions/upload-artifact@v4
+      id: artifact-upload-step
+      with:
+        name: flake8.sarif
+        path: flake8.sarif
+        overwrite: true
+        if-no-files-found: warn
+        compression-level: 1  # don't waist time
+      if: ${{ !cancelled() && (inputs.publish-artifacts == 'true') }}
+
+    - name: "Upload SARIF file"
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: flake8.sarif
+      if: ${{ !cancelled() }}
