@@ -24,7 +24,7 @@ jobs:
   bandit:
     permissions:
       contents: read  # for actions/checkout to fetch code
-      pull_request: read
+      pull-requests: read
       statuses: write
       security-events: write  # for github/codeql-action/upload-sarif to upload SARIF results
     runs-on: ubuntu-latest

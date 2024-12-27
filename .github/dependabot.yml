@@ -15,17 +15,16 @@ updates:
       - "Duplicate"
       - "Python Lang"
       - "CI"
-    rebase-strategy: "disabled"
     groups:
-      direct-dependencies:
-        dependency-type: "direct"
+      production-dependencies:
+        dependency-type: "production"
     allow:
       - dependency-name: "sarif-om"
-        dependency-type: "direct"
+        dependency-type: "production"
       - dependency-name: "flake8-json"
-        dependency-type: "direct"
+        dependency-type: "production"
       - dependency-name: "flake8"
-        dependency-type: "direct"
+        dependency-type: "production"
     assignees:
       - "reactive-firewall"
     commit-message:

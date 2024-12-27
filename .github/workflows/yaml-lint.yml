@@ -13,7 +13,7 @@ jobs:
   yaml-lint:
     permissions:
       contents: read
-      pull_request: read
+      pull-requests: read
       statuses: write
     runs-on: ubuntu-latest
     env:
