@@ -13,7 +13,7 @@
 name: "CodeQL"
 on:  # yamllint disable-line rule:truthy
   push:
-    branches: ["main",  "master", "stable"]
+    branches: ["main", "master", "stable"]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: ["main", "master", "stable"]
