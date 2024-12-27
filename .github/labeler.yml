@@ -1,0 +1,63 @@
+# .github/labler.yml
+---
+# Add 'Lint' label to any lint file changes
+Linter:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .yamllint.conf
+      - .flake8.ini
+      - .deepsource.toml
+      - action.yml
+      - .github/workflows/yaml-lint.yml
+
+# Add 'Lang' label to any python file changes
+Python Lang:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .github/workflows/bandit.yml
+      - '**/*.py'
+      - '*.py'
+
+Configs:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '*.yml'
+      - './**/*.yml'
+      - './.**/*.yml'
+      - '*.ini'
+      - '*.toml'
+      - '*.cfg'
+      - '*.conf'
+      - requirements.txt
+      - docs/requirements.txt
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '*.md'
+      - './**/*.md'
+      - docs/**/*
+      - docs/*
+
+# Add 'test' label
+Testing:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .github/workflows/*.yml
+      - .circleci/*
+
+CI:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .travis.yml
+      - .appveyor.yml
+      - .github/workflows/*
+      - .circleci/*
+
+Github:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .github/**/*
+      - .github/*
+      - README.md
+      - action.yml

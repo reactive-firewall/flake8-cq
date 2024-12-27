@@ -1,0 +1,54 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+---
+version: 2
+updates:
+  - package-ecosystem: "pip"  # See documentation for possible values
+    directory: "/"  # Location of package manifests
+    target-branch: "master"
+    versioning-strategy: increase
+    # Labels on pull requests for version updates only
+    labels:
+      - "Configs"
+      - "Duplicate"
+      - "Python Lang"
+      - "CI"
+    rebase-strategy: "disabled"
+    groups:
+      direct-dependencies:
+        dependency-type: "direct"
+    allow:
+      - dependency-name: "sarif-om"
+        dependency-type: "direct"
+      - dependency-name: "flake8-json"
+        dependency-type: "direct"
+      - dependency-name: "flake8"
+        dependency-type: "direct"
+    assignees:
+      - "reactive-firewall"
+    commit-message:
+      prefix: "[DEPENDENCY] "
+      include: "scope"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+  - package-ecosystem: "github-actions"  # See documentation for possible values
+    directory: ".github/workflows/"  # Location of package manifests
+    target-branch: "master"
+    rebase-strategy: "disabled"
+    # Labels on pull requests for version updates only
+    labels:
+      - "Configs"
+      - "Duplicate"
+      - "GitHub"
+      - "CI"
+    assignees:
+      - "reactive-firewall"
+    commit-message:
+      prefix: "[UPDATE] "
+      include: "scope"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
