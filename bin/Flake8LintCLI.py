@@ -267,6 +267,19 @@ class Flake8LintCLI:
 		else:
 			return "informational"
 
+	def triage_code(self, code: str) -> str:
+		"Yields the severity of the given code."
+		if not code:
+			return "none"
+		elif ("S" in code.upper()) or ("E" in code.upper()):
+			return "error"
+		elif ("W" in code.upper()) or ("C" in code.upper()) or ("B" in code.upper()):
+			return "warning"
+		elif ("D" in code.upper()) or ("N" in code.upper()) or ("F" in code.upper()):
+			return "note"
+		else:
+			return "none"
+
 	def convert_to_sarif(self, flake8_results):
 		"""Convert flake8 JSON results to SARIF format using sarif-om."""
 		sarif_log = sarif.SarifLog(
@@ -328,7 +341,7 @@ class Flake8LintCLI:
 					message=sarif.Message(
 						text=entry.get('text', '')
 					),
-					kind=self.grade(code),
+					kind=self.grade_code(code),
 					severity=self.triage_code(code),
 					locations=[
 						sarif.Location(
