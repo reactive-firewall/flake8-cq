@@ -430,13 +430,16 @@ class Flake8LintCLI:
 	def create_invocation(self) -> sarif.Invocation:
 		"""Create a SARIF invocation object with details of the flake8 run."""
 		safe_env_vars = {key: os.environ[key] for key in self.SAFE_ENV_VARS if key in os.environ}
+		cli_args = []
+		for nextFile in self.files:
+			cli_args.append(str(os.path.normpath(nextFile)))
 		return sarif.Invocation(
 			command_line=" ".join([tok for tok in self.command if tok not in self.files]),
-			arguments=" ".join(self.files),
+			arguments=cli_args,
 			start_time_utc=self.start_time,
 			end_time_utc=self.end_time,
 			execution_successful=self.execution_successful,
-			working_directory=sarif.ArtifactLocation(uri=os.getcwd()),
+			working_directory=sarif.ArtifactLocation(index=0, uri=os.getcwd()),
 			machine=platform.node(),
 			account=platform.node(),
 			environment_variables=safe_env_vars
