@@ -342,7 +342,7 @@ class Flake8LintCLI:
 						text=entry.get('text', '')
 					),
 					kind=self.grade_code(code),
-					severity=self.triage_code(code),
+					level=self.triage_code(code),
 					locations=[
 						sarif.Location(
 							id=self.create_id(file_uri),
