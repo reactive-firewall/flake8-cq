@@ -164,7 +164,7 @@ class Flake8LintCLI:
 			start_column=self.validate_position(entry.get('column_number')),
 			end_line=self.validate_position(entry.get('line_number')),
 			end_column=0,
-			snippet=entry.get('physical_line'),
+			snippet=sarif.ArtifactContent(text=entry.get('physical_line')),
 			char_length=self.validate_position(len(entry.get('physical_line', '')))
 		)
 
