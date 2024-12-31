@@ -162,8 +162,8 @@ class Flake8LintCLI:
 		return sarif.Region(
 			start_line=self.validate_position(entry.get('line_number')),
 			start_column=self.validate_position(entry.get('column_number')),
-			end_line=self.validate_position(entry.get('end_line_number')),
-			end_column=self.validate_position(entry.get('end_column_number')),
+			end_line=self.validate_position(entry.get('line_number')),
+			end_column=0,
 			snippet=entry.get('physical_line'),
 			char_length=self.validate_position(len(entry.get('physical_line', '')))
 		)
@@ -344,6 +344,10 @@ class Flake8LintCLI:
 					),
 					kind=self.grade_code(code),
 					level=self.triage_code(code),
+					analysis_target=sarif.ArtifactLocation(
+						index=next((j for j, artifact in enumerate(run.artifacts) if artifact.location.uri == file_uri), None),
+						uri=file_uri
+					),
 					locations=[
 						sarif.Location(
 							id=self.create_id(file_uri),
