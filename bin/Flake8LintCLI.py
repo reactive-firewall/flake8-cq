@@ -160,11 +160,12 @@ class Flake8LintCLI:
 	def create_region(self, entry: dict) -> sarif.Region:
 		"""Create a valid SARIF region object."""
 		return sarif.Region(
-			start_line=self.validate_position(entry.get('line')),
-			start_column=self.validate_position(entry.get('column')),
-			end_line=self.validate_position(entry.get('endLine')),
-			end_column=self.validate_position(entry.get('endColumn')),
-			char_length=(self.validate_position(entry.get('endColumn')) - self.validate_position(entry.get('column'))) if (self.validate_position(entry.get('line')) == self.validate_position(entry.get('endLine'))) else None
+			start_line=self.validate_position(entry.get('line_number')),
+			start_column=self.validate_position(entry.get('column_number')),
+			end_line=self.validate_position(entry.get('end_line_number')),
+			end_column=self.validate_position(entry.get('end_column_number')),
+			snippet=entry.get('physical_line'),
+			char_length=self.validate_position(len(entry.get('physical_line', '')))
 		)
 
 	def create_fix(self, file: str, fix_data: dict) -> Optional[sarif.Fix]:
