@@ -70,7 +70,9 @@ runs:
         printf "%s\n" "::endgroup::"
         printf "%s\n" "::group:: Install flake8"
         PY_REQ_PATH="${{ github.action_path }}/requirements.txt"
-        pip --python ${{ steps.cp313.outputs.python-path }} --no-input install -r "${PY_REQ_PATH}"
+        if [[ ( -r "${PY_REQ_PATH}" ) ]] ; then
+          pip --python ${{ steps.cp313.outputs.python-path }} --no-input install -r "${PY_REQ_PATH}"
+        fi ;
         printf "%s\n" "::endgroup::"
       if: ${{ !cancelled() }}
 
