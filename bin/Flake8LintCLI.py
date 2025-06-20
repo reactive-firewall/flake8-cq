@@ -9,7 +9,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 # ..........................................
-# https://www.github.com/reactive-firewall/flake8-cq/LICENSE
+# https://github.com/reactive-firewall/flake8-cq/LICENSE
 # ..........................................
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -81,7 +81,7 @@
 import hashlib
 import os
 import argparse
-import subprocess
+import subprocess  # nosec B404
 import json
 import platform
 import sarif_om as sarif
@@ -136,7 +136,7 @@ class Flake8LintCLI:
 		] + self.files
 		try:
 			self.start_time = str(datetime.datetime.now(datetime.UTC))
-			result = subprocess.run(self.command, capture_output=True, text=True, check=True)
+			result = subprocess.run(self.command, capture_output=True, text=True, check=True)  # nosec B404,B603
 			self.execution_successful = True
 			self.end_time = str(datetime.datetime.now(datetime.UTC))
 			return json.loads(result.stdout)
@@ -230,7 +230,7 @@ class Flake8LintCLI:
 		# Convert to a stable string representation
 		data_string = self.compact_json_output(cleaned_data)
 		# Create a SHA-256 hash of the data string
-		return hashlib.sha1(data_string.encode('utf-8')).hexdigest()
+		return hashlib.sha1(data_string.encode('utf-8'), usedforsecurity=False).hexdigest()
 
 	def generate_partial_weak_fingerprint(self, rule_id, message):
 		"""Generate a partial fingerprint from rule ID and message."""
@@ -247,7 +247,7 @@ class Flake8LintCLI:
 		# Convert to a stable string representation
 		data_string = self.compact_json_output(cleaned_data)
 		# Create a SHA-256 hash of the data string
-		return hashlib.sha256(data_string.encode('utf-8')).hexdigest()
+		return hashlib.sha256(data_string.encode('utf-8'), usedforsecurity=False).hexdigest()
 
 	def generate_partial_fingerprint(self, rule_id, message):
 		"""Generate a partial fingerprint from rule ID and message."""
