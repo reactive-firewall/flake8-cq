@@ -86,6 +86,7 @@ import json
 import platform
 import sarif_om as sarif
 import datetime
+import requests
 from typing import Dict, List, Optional
 from urllib.parse import quote
 import flake8
@@ -281,6 +282,38 @@ class Flake8LintCLI:
 		else:
 			return "none"
 
+	def fetch_rule_description(code):
+		"""Fetches the plain text and markdown descriptions for a given rule code."""
+		base_url = "https://raw.githubusercontent.com/reactive-firewall/flake-cq/master/Rules"
+		txt_url = f"{base_url}/{code}/{code}.txt"
+		md_url = f"{base_url}/{code}/{code}.md"
+
+		descriptions = {
+			'text': None,
+			'markdown': None,
+			'url': base_url,
+		}
+
+		# Fetch plain text description
+		try:
+			response = requests.get(txt_url)
+			response.raise_for_status()  # Raise an error for bad responses
+			descriptions['text'] = response.text.strip()
+			descriptions['url'] = txt_url
+		except requests.RequestException:
+			pass  # Handle error silently, fallback to existing description
+
+		# Fetch markdown description
+		try:
+			response = requests.get(md_url)
+			response.raise_for_status()
+			descriptions['markdown'] = response.text.strip()
+			descriptions['url'] = md_url
+		except requests.RequestException:
+			pass  # Handle error silently, fallback to existing description
+
+		return descriptions
+
 	def convert_to_sarif(self, flake8_results):
 		"""Convert flake8 JSON results to SARIF format using sarif-om."""
 		sarif_log = sarif.SarifLog(
@@ -318,20 +351,28 @@ class Flake8LintCLI:
 				code = entry.get('code', '')
 
 				if code not in rule_ids:
+					descriptions = fetch_rule_description(code)
+					short_description_text = descriptions['text'].splitlines()[0] if descriptions['text'] else entry.get('text', '')
+					full_description_text = descriptions['text'] if descriptions['text'] else entry.get('text', '')
+					short_description_markdown = descriptions['markdown'].splitlines()[0] if descriptions['markdown'] else ''
+					full_description_markdown = descriptions['markdown'] if descriptions['markdown'] else ''
+					# MIT code-listing for now
+					help_url = descriptions['url'] if descriptions['url'] else f"https://flakes.orsinium.dev/#{code}"
 					rule = sarif.ReportingDescriptor(
 						id=code,
 						name=code,
 						short_description=sarif.MultiformatMessageString(
-							text=entry.get('text', '')
+							text=short_description_text,
+							markdown=short_description_markdown,
 						),
 						full_description=sarif.MultiformatMessageString(
-							text=entry.get('text', '')
+							text=full_description_text,
+							markdown=full_description_markdown,
 						),
-						# MIT code-listing for now
-						help_uri=f"https://flakes.orsinium.dev/#{code}",
+						help_uri=help_url,
 						help=sarif.MultiformatMessageString(
-							text=entry.get('text', '')
-						)
+							text=full_description_text,
+						),
 					)
 					driver.rules.append(rule)
 					rule_ids[code] = rule
