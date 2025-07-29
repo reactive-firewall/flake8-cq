@@ -7,6 +7,7 @@ Please see https://docs.python.org/3/library/functions.html#exec for more info o
 
 See also:
 
+* B102 - https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.html
 * Docs - https://docs.python.org/3/library/functions.html#exec
 * PEP-551 - https://www.python.org/dev/peps/pep-0551/#background
 * PEP-578 - https://www.python.org/dev/peps/pep-0578/#suggested-audit-hook-locations
