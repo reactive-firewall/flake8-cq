@@ -1,0 +1,6 @@
+YTT202: `six.PY3` referenced (python4), use `not six.PY2`.
+
+See also:
+
+* YTT202 - https://github.com/asottile/flake8-2020
+* Python3.10 - https://github.com/asottile/python3.10

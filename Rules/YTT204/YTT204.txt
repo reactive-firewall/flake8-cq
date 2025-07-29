@@ -1,0 +1,6 @@
+YTT204: `sys.version_info.minor` compared to integer (python4), compare `sys.version_info` to tuple.
+
+See also:
+
+* YTT204 - https://github.com/asottile/flake8-2020
+* Python3.10 - https://github.com/asottile/python3.10
