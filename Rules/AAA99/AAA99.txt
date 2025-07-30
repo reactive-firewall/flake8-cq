@@ -1,0 +1,7 @@
+AAA99: collision when marking this line as NEW_CODE, was already OLD_CODE.
+
+This is a probably a BUG.
+
+## See Also
+
+* Flake-aaa AAA99 - https://flake8-aaa.readthedocs.io/en/stable/error_codes/AAA99-collision-when-marking-this-line.html
