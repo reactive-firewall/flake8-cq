@@ -282,7 +282,8 @@ class Flake8LintCLI:
 		else:
 			return "none"
 
-	def fetch_rule_description(code):
+	@staticmethod
+	def fetch_rule_description(code, timeout=5):
 		"""Fetches the plain text and markdown descriptions for a given rule code."""
 		base_url = "https://raw.githubusercontent.com/reactive-firewall/flake-cq/master/Rules"
 		txt_url = f"{base_url}/{code}/{code}.txt"
@@ -296,7 +297,7 @@ class Flake8LintCLI:
 
 		# Fetch plain text description
 		try:
-			response = requests.get(txt_url)
+			response = requests.get(txt_url, timeout=timeout)
 			response.raise_for_status()  # Raise an error for bad responses
 			descriptions['text'] = response.text.strip()
 			descriptions['url'] = txt_url
@@ -305,7 +306,7 @@ class Flake8LintCLI:
 
 		# Fetch markdown description
 		try:
-			response = requests.get(md_url)
+			response = requests.get(md_url, timeout=timeout)
 			response.raise_for_status()
 			descriptions['markdown'] = response.text.strip()
 			descriptions['url'] = md_url

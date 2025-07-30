@@ -1,0 +1,4 @@
+VNE002: variable name 'XXX' should be clarified.
+
+See Also:
+* flake8-variables-names VNE002 - https://github.com/best-doctor/flake8-variables-names
