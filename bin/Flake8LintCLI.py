@@ -262,8 +262,7 @@ class Flake8LintCLI:
 		}
 		return self.generate_fingerprint(partial_data)
 
-	@staticmethod
-	def grade_code(code: str) -> str:
+	def grade_code(self, code: str) -> str:
 		"""Yields the kind of result from the given code."""
 		if not code:
 			return "notApplicable"
@@ -274,8 +273,7 @@ class Flake8LintCLI:
 		else:
 			return "informational"
 
-	@staticmethod
-	def triage_code(code: str) -> str:
+	def triage_code(self, code: str) -> str:
 		"Yields the severity of the given code."
 		if not code:
 			return "none"
@@ -288,16 +286,15 @@ class Flake8LintCLI:
 		else:
 			return "none"
 
-	@staticmethod
-	def fetch_rule_description(code, timeout=5):
+	def fetch_rule_description(self, code, timeout=5) -> Dict[str, str]:
 		"""Fetches the plain text and markdown descriptions for a given rule code."""
-		txt_url = f"{FLAKE8_RULES_BASE_URL}/{code}/{code}.txt"
-		md_url = f"{FLAKE8_RULES_BASE_URL}/{code}/{code}.md"
+		txt_url = f"{self.FLAKE8_RULES_BASE_URL}/{code}/{code}.txt"
+		md_url = f"{self.FLAKE8_RULES_BASE_URL}/{code}/{code}.md"
 
 		descriptions = {
 			'text': None,
 			'markdown': None,
-			'url': FLAKE8_RULES_BASE_URL,
+			'url': self.FLAKE8_RULES_BASE_URL,
 		}
 
 		# Fetch plain text description
@@ -357,7 +354,7 @@ class Flake8LintCLI:
 				code = entry.get('code', '')
 
 				if code not in rule_ids:
-					descriptions = Flake8LintCLI.fetch_rule_description(code)
+					descriptions = self.fetch_rule_description(code)
 					short_description_text = descriptions['text'].splitlines()[0] if descriptions['text'] else entry.get('text', '')
 					full_description_text = descriptions['text'] if descriptions['text'] else entry.get('text', '')
 					short_description_markdown = descriptions['markdown'].splitlines()[0] if descriptions['markdown'] else ''
@@ -389,8 +386,8 @@ class Flake8LintCLI:
 					message=sarif.Message(
 						text=entry.get('text', '')
 					),
-					kind=Flake8LintCLI.grade_code(code),
-					level=Flake8LintCLI.triage_code(code),
+					kind=self.grade_code(code),
+					level=self.triage_code(code),
 					analysis_target=sarif.ArtifactLocation(
 						index=next((j for j, artifact in enumerate(run.artifacts) if artifact.location.uri == file_uri), None),
 						uri=file_uri
@@ -535,6 +532,7 @@ def main():
 		cli_tool.write_sarif(args.output, sarif_log)
 	except Exception as e:
 		print(f"::error file={__file__},title='Error while serializing results':: {e}")
+
 
 if __name__ == "__main__":
 	main()
