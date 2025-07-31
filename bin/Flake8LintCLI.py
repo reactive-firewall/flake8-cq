@@ -96,6 +96,10 @@ class Flake8LintCLI:
 		"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/refs/heads/main/sarif-2.1/schema/sarif-schema-2.1.0.json"
 	)
 
+	FLAKE8_RULES_BASE_URL = str(
+		"https://raw.githubusercontent.com/reactive-firewall/flake8-cq/master/Rules"
+	)
+
 	FLAKE8_VERSION_STR = flk8_ver = f"{flake8.__version_info__[0]}.{flake8.__version_info__[1]}.{flake8.__version_info__[2]}"
 
 	SAFE_ENV_VARS = [
@@ -120,7 +124,7 @@ class Flake8LintCLI:
 		# self.severity = severity
 		self.files = files
 		self.config = config if config else None
-		self.rule_docs_cache: Dict[str, str] = {}
+		self.rule_docs_cache: Dict[str, Dict[str, str, str]] = {}
 		self.command = None
 		self.start_time = None
 		self.end_time = None
@@ -137,7 +141,7 @@ class Flake8LintCLI:
 		] + self.files
 		try:
 			self.start_time = str(datetime.datetime.now(datetime.UTC))
-			result = subprocess.run(self.command, capture_output=True, text=True, check=True)  # nosec B404,B603
+			result = subprocess.run(self.command, input=None, capture_output=True, text=True, check=True)  # nosec B404,B603
 			self.execution_successful = True
 			self.end_time = str(datetime.datetime.now(datetime.UTC))
 			return json.loads(result.stdout)
@@ -258,7 +262,8 @@ class Flake8LintCLI:
 		}
 		return self.generate_fingerprint(partial_data)
 
-	def grade_code(self, code: str) -> str:
+	@staticmethod
+	def grade_code(code: str) -> str:
 		"""Yields the kind of result from the given code."""
 		if not code:
 			return "notApplicable"
@@ -269,7 +274,8 @@ class Flake8LintCLI:
 		else:
 			return "informational"
 
-	def triage_code(self, code: str) -> str:
+	@staticmethod
+	def triage_code(code: str) -> str:
 		"Yields the severity of the given code."
 		if not code:
 			return "none"
@@ -285,14 +291,13 @@ class Flake8LintCLI:
 	@staticmethod
 	def fetch_rule_description(code, timeout=5):
 		"""Fetches the plain text and markdown descriptions for a given rule code."""
-		base_url = "https://raw.githubusercontent.com/reactive-firewall/flake-cq/master/Rules"
-		txt_url = f"{base_url}/{code}/{code}.txt"
-		md_url = f"{base_url}/{code}/{code}.md"
+		txt_url = f"{FLAKE8_RULES_BASE_URL}/{code}/{code}.txt"
+		md_url = f"{FLAKE8_RULES_BASE_URL}/{code}/{code}.md"
 
 		descriptions = {
 			'text': None,
 			'markdown': None,
-			'url': base_url,
+			'url': FLAKE8_RULES_BASE_URL,
 		}
 
 		# Fetch plain text description
@@ -352,7 +357,7 @@ class Flake8LintCLI:
 				code = entry.get('code', '')
 
 				if code not in rule_ids:
-					descriptions = fetch_rule_description(code)
+					descriptions = Flake8LintCLI.fetch_rule_description(code)
 					short_description_text = descriptions['text'].splitlines()[0] if descriptions['text'] else entry.get('text', '')
 					full_description_text = descriptions['text'] if descriptions['text'] else entry.get('text', '')
 					short_description_markdown = descriptions['markdown'].splitlines()[0] if descriptions['markdown'] else ''
@@ -384,8 +389,8 @@ class Flake8LintCLI:
 					message=sarif.Message(
 						text=entry.get('text', '')
 					),
-					kind=self.grade_code(code),
-					level=self.triage_code(code),
+					kind=Flake8LintCLI.grade_code(code),
+					level=Flake8LintCLI.triage_code(code),
 					analysis_target=sarif.ArtifactLocation(
 						index=next((j for j, artifact in enumerate(run.artifacts) if artifact.location.uri == file_uri), None),
 						uri=file_uri
@@ -517,7 +522,7 @@ def main():
 	parser = argparse.ArgumentParser(description="Run flake8 and output results in SARIF format.")
 	parser.add_argument("--output", default="flake8.sarif",
 		help="Specify the output SARIF file name.")
-	parser.add_argument("--config", required=False, default="**/.flake8.ini",
+	parser.add_argument("--config", required=False,
 		help="Specify the Flake8 config file name.")
 	parser.add_argument("FILES", nargs='+', help="One or more files or glob patterns to check.")
 
