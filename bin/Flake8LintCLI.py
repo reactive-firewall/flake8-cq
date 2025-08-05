@@ -301,8 +301,13 @@ class Flake8LintCLI:
 		try:
 			response = requests.get(txt_url, timeout=timeout)
 			response.raise_for_status()  # Raise an error for bad responses
-			descriptions['text'] = response.text.strip()
-			descriptions['url'] = txt_url
+			_content_type = response.headers.get('Content-Type', '')
+			if content_type.startswith('text/plain'):
+				descriptions['text'] = response.text.strip()
+				descriptions['url'] = txt_url
+			else:
+				# skip processing
+				raise requests.RequestException(response)
 		except requests.RequestException:
 			pass  # Handle error silently, fallback to existing description
 
@@ -310,8 +315,13 @@ class Flake8LintCLI:
 		try:
 			response = requests.get(md_url, timeout=timeout)
 			response.raise_for_status()
-			descriptions['markdown'] = response.text.strip()
-			descriptions['url'] = md_url
+			_content_type = response.headers.get('Content-Type', '')
+			if content_type.startswith('text/plain'):
+				descriptions['markdown'] = response.text.strip()
+				descriptions['url'] = md_url
+			else:
+				# skip processing
+				raise requests.RequestException(response)
 		except requests.RequestException:
 			pass  # Handle error silently, fallback to existing description
 
