@@ -1,0 +1,5 @@
+E711: Comparison to None should be 'cond is None:'
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#programming-recommendations

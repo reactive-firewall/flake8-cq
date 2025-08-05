@@ -4,3 +4,4 @@ The function should be refactored into more modular functions.
 
 See Also:
 * https://flake8.pycqa.org/en/latest/user/error-codes.html
+* https://en.wikipedia.org/wiki/Cyclomatic_complexity

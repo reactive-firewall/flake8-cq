@@ -1,0 +1,5 @@
+E125: Continuation line with same indent as next logical line
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#indentation

@@ -1,0 +1,5 @@
+W601: .has_key
+
+See Also:
+
+  - https://docs.python.org/2/library/stdtypes.html#dict.has_key

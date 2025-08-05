@@ -1,0 +1,4 @@
+F901: raise NotImplemented should be raise NotImplementedError
+
+See Also:
+* NotImplementedError - https://docs.python.org/3/library/exceptions.html#NotImplementedError

@@ -1,0 +1,5 @@
+E722: Do not use bare except, specify exception instead
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#programming-recommendations

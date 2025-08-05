@@ -1,0 +1,5 @@
+W603: '<>' is deprecated, use '!='
+
+See Also:
+
+  - https://docs.python.org/2/library/stdtypes.html#index-9

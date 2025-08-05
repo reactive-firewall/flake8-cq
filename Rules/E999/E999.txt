@@ -1,0 +1,5 @@
+E999: SyntaxError
+
+See Also:
+
+  - https://github.com/PyCQA/flake8/blob/master/docs/source/user/error-codes.rst#L89

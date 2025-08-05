@@ -1,0 +1,5 @@
+E124: Closing bracket does not match visual indentation
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#indentation
