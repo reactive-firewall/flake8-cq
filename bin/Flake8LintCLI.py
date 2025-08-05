@@ -266,25 +266,32 @@ class Flake8LintCLI:
 		"""Yields the kind of result from the given code."""
 		if not code:
 			return "notApplicable"
-		elif ("W" in code.upper()) or ("E" in code.upper()):
+		elif ("S" in code.upper()) or ("E2" in code.upper()) or ("VNE0" in code.upper()):
 			return "fail"
-		elif ("D" in code.upper()) or ("C" in code.upper()) or ("B" in code.upper()):
+		elif ("AAA99" in code.upper()) or ("E999" in code.upper()):
+			return "notApplicable"  # bugs in linter are exempt
+		elif ("F" in code.upper()) or ("D" in code.upper()) or ("C" in code.upper()) or ("B" in code.upper()):
 			return "review"
 		else:
 			return "informational"
 
 	def triage_code(self, code: str) -> str:
 		"Yields the severity of the given code."
-		if not code:
-			return "none"
-		elif ("S" in code.upper()) or ("E" in code.upper()):
-			return "error"
-		elif ("W" in code.upper()) or ("C" in code.upper()) or ("B" in code.upper()):
-			return "warning"
-		elif ("D" in code.upper()) or ("N" in code.upper()) or ("F" in code.upper()):
-			return "note"
-		else:
-			return "none"
+		if code:
+			# use set for "or"-chains of conditions
+			severity_map = {
+				"error": {"S", "E2", "E3", "E9"},
+				"warning": {"W", "E", "C", "B"},
+				"note": {"D", "N", "F"}
+			}
+			# keep logic straight forward
+			code_upper = code.upper()
+			# use loop for nested sets of conditions instead of "or"-chains
+			for severity, codes in severity_map.items():
+				if any(code in code_upper for code in codes):
+					return severity
+		# default
+		return "none"
 
 	def fetch_rule_description(self, code, timeout=5) -> Dict[str, str]:
 		"""Fetches the plain text and markdown descriptions for a given rule code."""
@@ -293,18 +300,18 @@ class Flake8LintCLI:
 
 		descriptions = {
 			'text': None,
-			'markdown': None,
-			'url': self.FLAKE8_RULES_BASE_URL,
+			"markdown": None,
+			"url": self.FLAKE8_RULES_BASE_URL,
 		}
 
 		# Fetch plain text description
 		try:
 			response = requests.get(txt_url, timeout=timeout)
 			response.raise_for_status()  # Raise an error for bad responses
-			_content_type = response.headers.get('Content-Type', '')
-			if content_type.startswith('text/plain'):
+			_content_type = response.headers.get("Content-Type", "")
+			if content_type.startswith("text/plain"):
 				descriptions['text'] = response.text.strip()
-				descriptions['url'] = txt_url
+				descriptions["url"] = txt_url
 			else:
 				# skip processing
 				raise requests.RequestException(response)
@@ -315,10 +322,10 @@ class Flake8LintCLI:
 		try:
 			response = requests.get(md_url, timeout=timeout)
 			response.raise_for_status()
-			_content_type = response.headers.get('Content-Type', '')
-			if content_type.startswith('text/plain'):
-				descriptions['markdown'] = response.text.strip()
-				descriptions['url'] = md_url
+			_content_type = response.headers.get("Content-Type", "")
+			if content_type.startswith("text/plain"):
+				descriptions["markdown"] = response.text.strip()
+				descriptions["url"] = md_url
 			else:
 				# skip processing
 				raise requests.RequestException(response)
@@ -344,7 +351,7 @@ class Flake8LintCLI:
 					artifacts=[],
 					results=[],
 					invocations=[self.create_invocation()],
-					default_source_language="python"
+					default_source_language="python",
 				)
 			]
 		)
@@ -352,25 +359,43 @@ class Flake8LintCLI:
 		run = sarif_log.runs[0]
 		driver = run.tool.driver
 		rule_ids = {}
+		artifact_uris = set()
+		artifact_index_mark = 0
 
-		for file_uri, violations in flake8_results.items():
-			if file_uri not in [artifact.location.uri for artifact in run.artifacts]:
-					run.artifacts.append(sarif.Artifact(
-						roles=["analysisTarget", "referencedOnCommandLine"],
-						location=sarif.ArtifactLocation(index=len(run.artifacts), uri=file_uri),
-						source_language="python"
-					))
+		for raw_file_uri, violations in flake8_results.items():
+
+			# Normalize file path
+			file_uri = os.path.normpath(raw_file_uri).replace(os.sep, '/')
+
+			# Add unique artifacts
+			if file_uri and file_uri not in artifact_uris:
+				artifact_uris.add(file_uri)
+				run.artifacts.append(sarif.Artifact(
+					roles=["analysisTarget", "referencedOnCommandLine"],
+					location=sarif.ArtifactLocation(index=artifact_index_mark, uri=file_uri),
+					source_language="python"
+				))
+				artifact_index_mark += 1
+
 			for entry in violations:
 				code = entry.get('code', '')
 
 				if code not in rule_ids:
 					descriptions = self.fetch_rule_description(code)
-					short_description_text = descriptions['text'].splitlines()[0] if descriptions['text'] else entry.get('text', '')
-					full_description_text = descriptions['text'] if descriptions['text'] else entry.get('text', '')
-					short_description_markdown = descriptions['markdown'].splitlines()[0] if descriptions['markdown'] else ''
-					full_description_markdown = descriptions['markdown'] if descriptions['markdown'] else ''
+					if descriptions['text']:
+						short_description_text = descriptions['text'].splitlines()[0] if len(descriptions['text'].splitlines()) > 0 else entry.get('text', '')
+						full_description_text = descriptions['text']
+					else:
+						short_description_text = entry.get('text', '')
+						full_description_text = entry.get('text', '')
+					if descriptions["markdown"]:
+						short_description_markdown = descriptions["markdown"].splitlines()[0] if len(descriptions["markdown"].splitlines()) > 0 else ""
+						full_description_markdown = descriptions["markdown"]
+					else:
+						short_description_markdown = ""
+						full_description_markdown = ""
 					# MIT code-listing for now
-					help_url = descriptions['url'] if descriptions['url'] else f"https://flakes.orsinium.dev/#{code}"
+					help_url = descriptions["url"] if descriptions["url"] else f"https://flakes.orsinium.dev/#{code}"
 					rule = sarif.ReportingDescriptor(
 						id=code,
 						name=code,
@@ -394,7 +419,7 @@ class Flake8LintCLI:
 					rule_id=code,
 					rule_index=next((i for i, deRule in enumerate(driver.rules) if deRule == rule), None),
 					message=sarif.Message(
-						text=entry.get('text', '')
+						text=entry.get('text', f"Detected {code}.")
 					),
 					kind=self.grade_code(code),
 					level=self.triage_code(code),
