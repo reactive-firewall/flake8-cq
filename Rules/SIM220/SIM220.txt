@@ -1,0 +1,20 @@
+SIM220: Use 'False' instead of 'a and not a'.
+
+Simplify the statement.
+
+Complex Form:
+
+a and not a
+
+
+Simplified From:
+
+False
+
+
+Rationale:
+Both notations are semantically equivalent in Python 3, but the second one is shorter and faster.
+
+See Also:
+* ex falso quodlibet - https://en.wikipedia.org/wiki/Contradiction
+* SIM220 - https://github.com/MartinThoma/flake8-simplify/issues/6

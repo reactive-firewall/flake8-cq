@@ -1,0 +1,25 @@
+SIM401: Use 'a_dict.get(key, "default_value")' instead of an if-block.
+
+Dictionaries have built in methods for "fetch this value if it exists or use this default".
+The pattern of checking for the key and then assigning tends to pop up here and there. It is
+a good practice to validate the data exists before accessing it, but in this case it is more
+complex than just using the language built-in behavior.
+
+Complex Form:
+
+if "my_key" in example_dict:
+    thing = example_dict["my_key"]
+else:
+    thing = "default_value"
+
+
+Simplified From:
+
+thing = example_dict.get("my_key", "default_value")
+
+
+Rationale:
+Both notations are semantically equivalent in Python 3, but the second one is shorter.
+
+See Also:
+* SIM401 - https://github.com/MartinThoma/flake8-simplify/issues/72

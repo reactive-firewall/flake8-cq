@@ -1,0 +1,20 @@
+SIM223: Use 'False' instead of '... and False'.
+
+Simplify the statement.
+
+Complex Form:
+
+a and False
+
+
+Simplified From:
+
+False
+
+
+Rationale:
+Both notations are semantically equivalent in Python 3, but the second one is shorter and faster.
+
+See Also:
+* ex falso quodlibet - https://en.wikipedia.org/wiki/Contradiction
+* SIM223 - https://github.com/MartinThoma/flake8-simplify/issues/6
