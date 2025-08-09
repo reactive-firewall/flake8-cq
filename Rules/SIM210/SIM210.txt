@@ -1,0 +1,19 @@
+SIM210: Use 'bool(a)' instead of 'True if a else False'
+
+It reduces cognitive complexity slightly.
+
+Complex Form:
+
+True if a else False
+
+
+Simplified From:
+
+bool(a)
+
+
+Rationale:
+Both notations are equivalent in Python 3, but the second one is shorter.
+
+See Also:
+* SIM210 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim210

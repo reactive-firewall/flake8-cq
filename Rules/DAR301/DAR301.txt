@@ -1,0 +1,14 @@
+DAR301: The docstring is missing a yield present in definition.
+
+Config Options:
+
+You can ignore enabled-by-default exceptions in the configuration file using the ignore option.
+It accepts a comma-separated list of error codes.
+
+[darglint]
+ignore=DAR301
+
+See also:
+
+* DAR301 - https://pypi.org/project/darglint/
+* PEP-484 - https://www.python.org/dev/peps/pep-0484/

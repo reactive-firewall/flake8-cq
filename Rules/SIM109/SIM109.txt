@@ -1,0 +1,26 @@
+SIM109:  Use a tuple to compare a value against multiple values.
+
+Use the "in" operator and a list / tuple instead of multiple comparisons.
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM109
+
+
+Complex form:
+
+if a == b or a == c:
+    d
+
+
+Simplified form:
+
+if a in [b, c]:
+    d
+
+
+See Also:
+* SIM109 - https://github.com/MartinThoma/flake8-simplify/issues/11

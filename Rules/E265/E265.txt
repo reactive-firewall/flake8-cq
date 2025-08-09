@@ -1,0 +1,20 @@
+E265: Block comment should start with '# '.
+
+Block comments should have one space before the sharp sign ('#') and the comment itself.
+
+Anti-pattern:
+
+#This comment needs a space
+def print_name(self):
+    print(self.name)
+
+
+Best Practice:
+
+# Comment is correct now
+def print_name(self):
+    print(self.name)
+
+
+See Also:
+* PEP8 - https://www.python.org/dev/peps/pep-0008/#block-comments

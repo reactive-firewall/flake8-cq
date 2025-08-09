@@ -1,0 +1,19 @@
+SIM906: Experimental Rule to simplify code.
+
+This rule will be renamed to SIM126 after its 6-month trial period is over. Please report any
+issues you encounter with this rule to https://github.com/MartinThoma/flake8-simplify
+
+The trial period starts on 20th of February and will end on 20th of September 2022.
+
+Complex Form:
+
+os.path.join(a, os.path.join(b, c))
+
+
+Simplified From:
+
+os.path.join(a, b, c)
+
+
+See Also:
+* SIM906 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#SIM906

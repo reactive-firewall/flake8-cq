@@ -1,0 +1,22 @@
+E113: Unexpected indentation
+A line is indented when it shouldn’t be. Usually this will mean that multiple lines need to be
+indented at the same level.
+
+Anti-pattern:
+
+In this example, the two print statements do not have matching indentation.
+
+def hello_world():
+  print('hello')
+    print('world')
+
+
+Best practice:
+
+def hello_world():
+    print('hello')
+    print('world')
+
+
+See Also:
+* PEP-8 - https://www.python.org/dev/peps/pep-0008/#indentation

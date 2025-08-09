@@ -1,0 +1,22 @@
+SIM202: Use 'a == b' instead of 'not a != b'
+
+It reduces cognitive complexity slightly.
+
+Complex Form:
+
+not a != b
+
+
+Simplified From:
+
+a == b
+
+
+Rationale:
+Both notations are equivalent in Python 3, but the second one is shorter.
+
+See Also:
+* SIM201 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim201
+* SIM202 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim202
+* SIM203 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim203
+* SIM208 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim208

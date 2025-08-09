@@ -1,0 +1,21 @@
+E111: Indentation is not a multiple of four.
+
+PEP-8 recommends that Python code indentation be a multiple of four spaces.
+
+Anti-pattern:
+
+class User(object):
+  def __init__(self, name):
+    self.name = name
+
+
+Best practice:
+
+class User(object):
+    def __init__(self, name):
+        self.name = name
+
+
+See also:
+* PEP-8 - https://www.python.org/dev/peps/pep-0008/#indentation
+

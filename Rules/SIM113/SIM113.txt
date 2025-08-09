@@ -1,0 +1,30 @@
+SIM113: Use enumerate instead of manually incrementing a counter.
+
+Using enumerate in simple cases like the loops below is a tiny bit easier to read as the reader
+does not have to figure out where / when the loop variable is incremented (or if it is incremented
+in multiple places).
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM113
+
+
+Complex form:
+
+idx = 0
+for el in iterable:
+    ...
+    idx += 1
+
+
+Simplified form:
+
+for idx, el in enumerate(iterable):
+    ...
+
+
+See Also:
+* SIM113 - https://github.com/MartinThoma/flake8-simplify/issues/18

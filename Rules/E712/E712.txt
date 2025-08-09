@@ -1,0 +1,5 @@
+E712: Comparison to true should be 'if cond is true:' or 'if cond:'
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#programming-recommendations

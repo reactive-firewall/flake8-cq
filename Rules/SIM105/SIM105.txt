@@ -1,0 +1,34 @@
+SIM105: Can Simplify with 'contextlib.suppress(...)' instead of try-except-pass.
+
+Use 'contextlib.suppress(...)' instead of try-except-pass to simplify.
+
+Caveat:
+Please note that contextlib.suppress is roughly 3x slower than try/except
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM105
+
+
+Complex form:
+
+try:
+    foo()
+except ValueError:
+    pass
+
+
+Simplified form:
+
+from contextlib import suppress
+
+with suppress(ValueError):
+    foo()
+
+
+See Also:
+* SIM105 Caveat - https://github.com/MartinThoma/flake8-simplify/issues/91
+* SIM105 - https://github.com/MartinThoma/flake8-simplify/issues/5

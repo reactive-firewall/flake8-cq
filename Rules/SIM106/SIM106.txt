@@ -1,0 +1,7 @@
+SIM106: Handle error cases early.
+
+This rule was removed due to too many false-positives.
+Exceptions and error cases should be handled early to prevent deeply-nested code.
+
+See Also:
+* SIM106 - https://github.com/MartinThoma/flake8-simplify/issues/8

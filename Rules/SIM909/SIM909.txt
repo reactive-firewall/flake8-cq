@@ -1,0 +1,21 @@
+SIM909: Experimental Rule to simplify code.
+
+Thank you Ryan Delaney for the idea!
+
+This rule will be renamed to SIM124 after its 6-month trial period is over. Please report any
+issues you encounter with this rule to https://github.com/MartinThoma/flake8-simplify
+
+The trial period starts on 28th of March and will end on 28th of September 2022.
+
+Complex Form:
+
+foo = foo
+
+
+Simplified From:
+
+# Nothing. Reflexive assignments have no purpose.
+
+
+See Also:
+* SIM909 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#SIM909

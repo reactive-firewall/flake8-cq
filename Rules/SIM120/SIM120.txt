@@ -1,0 +1,20 @@
+SIM120: Subclassing object is implied in modern Python.
+
+Use 'class FooBar:' instead of 'class FooBar(object):'
+
+Complex Form:
+
+class FooBar(object):
+    ...
+
+
+Simplified From:
+
+class FooBar:
+    ...
+
+Rationale:
+Both notations are equivalent in Python 3, but the second one is shorter.
+
+See Also:
+* SIM120 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim120

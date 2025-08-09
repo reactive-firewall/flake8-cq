@@ -1,0 +1,27 @@
+SIM108: Can Simplify if-else-assign with the ternary operator.
+
+Use the ternary operator if it's reasonable.
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM108
+
+
+Anti-Pattern:
+
+if a:
+    b = c
+else:
+    b = d
+
+
+Best Practice:
+
+b = c if a else d
+
+
+See Also:
+* SIM108 - https://github.com/MartinThoma/flake8-simplify/issues/1

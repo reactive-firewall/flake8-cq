@@ -1,0 +1,5 @@
+E221: Multiple spaces before operator
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#pet-peeves

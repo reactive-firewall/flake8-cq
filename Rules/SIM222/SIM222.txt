@@ -1,0 +1,20 @@
+SIM222: Use 'True' instead of '... or True'.
+
+Simplify the tautology statement; Use 'True'.
+
+Complex Form:
+
+a or True
+
+
+Simplified From:
+
+True
+
+
+Rationale:
+Both notations are semantically equivalent in Python 3, but the second one is shorter and faster.
+
+See Also:
+* tautology - https://en.wikipedia.org/wiki/Tautology_(logic)
+* SIM222 - https://github.com/MartinThoma/flake8-simplify/issues/6

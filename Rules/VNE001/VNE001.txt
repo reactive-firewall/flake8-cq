@@ -1,0 +1,6 @@
+VNE001: single letter variable names like 'XXX' are not allowed.
+
+Consider a more descriptive name.
+
+See Also:
+* flake8-variables-names VNE001 - https://github.com/best-doctor/flake8-variables-names

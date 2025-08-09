@@ -1,0 +1,5 @@
+W504: Line break occurred after a binary operator
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#should-a-line-break-before-or-after-a-binary-operator

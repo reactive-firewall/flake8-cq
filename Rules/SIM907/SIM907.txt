@@ -1,0 +1,21 @@
+SIM907: Experimental Rule to simplify code.
+
+This rule will be renamed to SIM127 after its 6-month trial period is over. Please report
+any issues you encounter with this rule to https://github.com/MartinThoma/flake8-simplify
+
+The trial period starts on 28th of March and will end on 28th of September 2022.
+
+Complex Form:
+
+def foo(a: Union[int, None]) -> Union[int, None]:
+    return a
+
+
+Simplified From:
+
+def foo(a: Optional[int]) -> Optional[int]:
+    return a
+
+
+See Also:
+* SIM907 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#SIM907

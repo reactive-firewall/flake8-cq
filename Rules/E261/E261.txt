@@ -1,0 +1,5 @@
+E261: At least two spaces before inline comment
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#inline-comments

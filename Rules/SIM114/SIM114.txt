@@ -1,0 +1,29 @@
+SIM114: Duplicate blocks in conditionals.
+
+Combine conditions via a logical or to prevent duplicating code.
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM114
+
+
+Complex form:
+
+if a:
+    b
+elif c:
+    b
+
+
+Simplified form:
+
+if a or c:
+    b
+
+
+See Also:
+* Sourcery Blog - https://sourcery.ai/blog/explaining-refactorings-4/
+* SIM114 - https://github.com/MartinThoma/flake8-simplify/issues/10

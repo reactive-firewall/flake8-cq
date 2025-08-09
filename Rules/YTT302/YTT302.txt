@@ -1,0 +1,6 @@
+YTT302: `sys.version` compared to string (python10), use `sys.version_info`.
+
+See also:
+
+* YTT302 - https://github.com/asottile/flake8-2020
+* Python3.10 - https://github.com/asottile/python3.10

@@ -1,0 +1,24 @@
+SIM112: Non-Uppercase environment names.
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM112
+
+
+Anti-Pattern:
+
+os.environ["foo"]
+os.environ.get("bar")
+
+
+Best Practice:
+Use all-caps for environment variables.
+
+os.environ["FOO"]
+os.environ.get("BAR")
+
+See Also:
+* SIM112 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim112
