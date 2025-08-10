@@ -1,0 +1,4 @@
+N400: Found backslash that is used for line breaking.
+
+See Also:
+* flake8-broken-line - https://github.com/wemake-services/flake8-broken-line?tab=readme-ov-file#error-codes
