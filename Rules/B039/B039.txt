@@ -1,0 +1,8 @@
+B039: ContextVar with mutable literal or function call as default.
+
+This is only evaluated once, and all subsequent calls to .get() would return the same instance
+of the default. This uses the same logic as B006 and B008, including ignoring values in
+extend-immutable-calls.
+
+See Also:
+* Bugbear B039 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

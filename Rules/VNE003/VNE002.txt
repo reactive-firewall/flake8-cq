@@ -1,0 +1,22 @@
+VNE003: variable names that shadow builtins are not allowed.
+
+The Flake8 plugin complaint **VNE003** indicates that variable names which shadow built-in names
+are not allowed. This rule is crucial for maintaining code clarity and preventing potential bugs
+that can arise from unintentional name collisions.
+
+Rationale:
+The rationale behind the VNE003 rule is to promote best practices in coding by ensuring that
+variable names do not conflict with Python's built-in names. This helps maintain a clean and
+understandable codebase, reducing the likelihood of errors and improving collaboration among
+developers.
+
+See Also:
+* flake8-variables-names VNE003 - https://github.com/best-doctor/flake8-variables-names
+* CWE-563 - https://cwe.mitre.org/data/definitions/563.html
+* CWE-672 - https://cwe.mitre.org/data/definitions/672.html
+* Python Built-in Functions - https://docs.python.org/3/library/functions.html
+* Python Built-in Constants - https://docs.python.org/3/library/constants.html
+* Python Built-in types - https://docs.python.org/3/library/stdtypes.html
+* Python Built-in Exceptions - https://docs.python.org/3/library/exceptions.html
+* Python3 builtins modules - https://docs.python.org/3/library/builtins.html
+* Inspecting for Built-ins - https://docs.python.org/3/library/inspect.html#inspect.isbuiltin

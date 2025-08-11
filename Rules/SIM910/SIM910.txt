@@ -1,0 +1,14 @@
+SIM910: Experimental Rule to simplify code.
+
+Complex Form:
+
+dict.get(key, None)
+
+
+Simplified From:
+
+dict.get(key)
+
+
+See Also:
+* SIM910 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#SIM910

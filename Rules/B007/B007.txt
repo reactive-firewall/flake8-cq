@@ -1,0 +1,6 @@
+B007: Loop control variable not used within the loop body.
+
+If this is intended, start the name with an underscore.
+
+See Also:
+* Bugbear B007 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

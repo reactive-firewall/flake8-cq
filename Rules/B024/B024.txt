@@ -1,0 +1,7 @@
+B024: Abstract base class has methods, but none of them are abstract.
+
+This is not necessarily an error, but you might have forgotten to add the @abstractmethod
+decorator, potentially in conjunction with @classmethod, @property and/or @staticmethod.
+
+See Also:
+* Bugbear B024 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

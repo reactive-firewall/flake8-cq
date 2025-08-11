@@ -1,0 +1,19 @@
+SIM300: Use 'age == 42' instead of '42 == age'.
+
+It's way more common to have the variable first.
+
+Complex Form:
+
+"Yoda" == i_am
+
+
+Simplified From:
+
+i_am == "Yoda"
+
+
+Rationale:
+Both notations are equivalent in Python 3, but the second one is more pythonic.
+
+See Also:
+* SIM300 - https://github.com/MartinThoma/flake8-simplify/issues/16

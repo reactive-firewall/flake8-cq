@@ -1,0 +1,10 @@
+B906: visit_ function with no further call to a visit function.
+
+This is often an error, and will stop the visitor from recursing into the subnodes of a visited
+node. Consider adding a call self.generic_visit(node) at the end of the function. Will only
+trigger on function names where the part after visit_ is a valid ast type with a non-empty
+_fields attribute. This is meant to be enabled by developers writing visitors using the ast
+module, such as flake8 plugin writers.
+
+See Also:
+* Bugbear B906 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

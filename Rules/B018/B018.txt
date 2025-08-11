@@ -1,0 +1,8 @@
+B018: Found useless expression.
+
+Either assign it to a variable or remove it. Note that dangling commas will cause things to be
+interpreted as useless tuples. For example, in the statement print(".."), is the same
+as (print(".."),) which is an unassigned tuple. Simply remove the comma to clear the error.
+
+See Also:
+* Bugbear B018 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

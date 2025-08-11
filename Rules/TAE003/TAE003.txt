@@ -1,0 +1,4 @@
+TAE003: too long annotation ({0} > {1})
+
+See Also:
+* flake8-annotations-complexity - https://github.com/best-doctor/flake8-annotations-complexity?tab=MIT-1-ov-file

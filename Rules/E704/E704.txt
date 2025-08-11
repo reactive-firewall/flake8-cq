@@ -1,0 +1,5 @@
+E704: Multiple statements on one line
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#other-recommendations

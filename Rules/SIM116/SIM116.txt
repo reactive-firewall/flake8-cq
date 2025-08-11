@@ -1,0 +1,38 @@
+SIM116: Can simplify many if-else with mapping.
+
+Consider using a dictionary instead many if/elif equality checks.
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM116
+
+
+Complex form:
+
+if a == "foo":
+    return "bar"
+elif a == "bar":
+    return "baz"
+elif a == "boo":
+    return "ooh"
+else:
+    return 42
+
+
+Simplified form:
+
+mapping = {"foo": "bar", "bar": "baz", "boo": "ooh"}
+return mapping.get(a, 42)
+
+
+Best Practice:
+Consider the trade-offs; Avoid use of function calls with the dictionary approach and avoid
+constants with the many if/else approach.
+
+See Also:
+* flake8-simplify SIM116 - https://github.com/MartinThoma/flake8-simplify/issues/31
+* Caveats of SIM116 - https://github.com/MartinThoma/flake8-simplify/issues/113
+* flake8-simplify - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file

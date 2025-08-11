@@ -1,0 +1,14 @@
+DAR001: The docstring was not parsed correctly due to a syntax error.
+
+Config Options:
+
+You can ignore enabled-by-default exceptions in the configuration file using the ignore option.
+It accepts a comma-separated list of error codes.
+
+[darglint]
+ignore=DAR001
+
+See also:
+
+* DAR001 - https://pypi.org/project/darglint/
+* PEP-484 - https://www.python.org/dev/peps/pep-0484/

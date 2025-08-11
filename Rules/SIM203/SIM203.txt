@@ -1,0 +1,28 @@
+SIM203: Use 'a not in b' instead of 'not a in b'
+
+It reduces the complexity. Both cognitively and computationally.
+
+Complex Form:
+
+not a in b
+
+
+Simplified From:
+
+a not in b
+
+
+Rationale:
+Both notations are equivalent in Python 3, but the second one is simpler. Because, Python
+will treat 'not a in b' semantically as 'not (a in b)' and thus we can apply a generalization of
+De Morgan's laws to the statement (hint: because 'a in b' can be generalized as with
+inclusive 'or's 'a in b[i] or a in b[i+1] for all i from 0 thru len(b)'.
+
+
+See Also:
+* De Morgan's laws - https://en.wikipedia.org/wiki/De_Morgan%27s_laws
+* SIM203 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim203
+
+* SIM201 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim201
+* SIM202 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim202
+* SIM208 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#sim208

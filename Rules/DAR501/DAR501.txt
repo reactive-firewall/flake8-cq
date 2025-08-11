@@ -1,0 +1,14 @@
+DAR501: The docstring describes a variable which is not defined.
+
+Config Options:
+
+You can ignore enabled-by-default exceptions in the configuration file using the ignore option.
+It accepts a comma-separated list of error codes.
+
+[darglint]
+ignore=DAR501
+
+See also:
+
+* DAR501 - https://pypi.org/project/darglint/
+* PEP-484 - https://www.python.org/dev/peps/pep-0484/

@@ -1,0 +1,23 @@
+AAA04: expected 1 blank line before Assert block, found none
+
+For tests that have an Assert block, there must be a blank line between the Act and Assert blocks,
+but Flake8-AAA could not find one.
+
+Prerequisites:
+As with rule AAA03, this rule works best with pycodestyle’s E303 rule enabled because it
+ensures that there are not multiple blank lines between the blocks.
+
+If test code is formatted with Black, then it’s best to set “large” Act block style.
+
+Resolution:
+Add a blank line before the Assert block.
+
+Rationale:
+This blank line creates separation between the action and the assertions and makes the Act block
+easy to spot.
+
+See Also:
+* Flake-aaa AAA04 - https://flake8-aaa.readthedocs.io/en/stable/error_codes/AAA04-expected-1-blank-line-before-assert-block.html
+* Flake-aaa AAA03 - https://flake8-aaa.readthedocs.io/en/stable/error_codes/AAA03-expected-1-blank-line-before-act-block.html
+* Arrange-Act-Assert: A Pattern for Writing Good Tests - https://automationpanda.com/2020/07/07/arrange-act-assert-a-pattern-for-writing-good-tests/
+* large act block-style - https://flake8-aaa.readthedocs.io/en/stable/options.html#large-act-block-style

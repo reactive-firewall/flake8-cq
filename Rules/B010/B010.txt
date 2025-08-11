@@ -1,0 +1,6 @@
+B010: Do not call setattr(x, 'attr', val), instead use normal property access: 'x.attr = val'.
+
+There is no additional safety in using setattr if you know the attribute name ahead of time.
+
+See Also:
+* Bugbear B010 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

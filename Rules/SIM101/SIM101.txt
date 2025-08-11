@@ -1,0 +1,25 @@
+SIM101: Multiple isinstance-calls which can be merged into a single call by using a tuple.
+
+Multiple isinstance-calls which can be merged into a single isinstance-call by using a tuple as
+the second argument.
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM101
+
+
+Anti-Pattern:
+
+isinstance(a, int) or isinstance(a, float)
+
+
+Best Practice:
+
+isinstance(a, (int, float))
+
+
+See Also:
+* SIM101 - https://github.com/MartinThoma/flake8-simplify?tab=readme-ov-file#SIM101

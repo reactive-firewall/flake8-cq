@@ -1,0 +1,9 @@
+B004: Using hasattr(x, '__call__') to test if x is callable is unreliable.
+
+If x implements custom __getattr__ or its __call__ is itself not callable, you might get
+misleading results. Use callable(x) for consistent results.
+
+See Also:
+* hasattr
+* __getattr__
+* Bugbear B004 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

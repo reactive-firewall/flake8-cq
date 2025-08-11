@@ -1,0 +1,33 @@
+SIM103: Unnecessary if-else to return boolean.
+
+Do not use an if-else block when you can directly return the condition.
+
+Config Options:
+You might have good reasons to ignore some flake8 rules. To do that, use the standard Flake8
+configuration. For example:
+
+[flake8]
+extend-ignore = SIM103
+
+
+Complex Form:
+
+if condition:
+    return True
+else
+    return False
+
+
+Simplified From:
+Use 'bool()' to maintain the semantics while simplifying the code.
+
+return bool(condition)
+
+
+## Rationale
+
+Both notations are semantically equivalent in Python 3, but the second one is shorter, and more
+pythonic.
+
+## See Also
+* [flake8-simplify SIM103](https://github.com/MartinThoma/flake8-simplify/issues/3)

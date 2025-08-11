@@ -1,0 +1,6 @@
+YTT201: `sys.version_info[0] == 3` referenced (python4), use `>=`.
+
+See also:
+
+* YTT201 - https://github.com/asottile/flake8-2020
+* Python3.10 - https://github.com/asottile/python3.10

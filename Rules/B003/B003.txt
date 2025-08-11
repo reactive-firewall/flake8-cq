@@ -1,0 +1,9 @@
+B003: Assigning to os.environ doesn't clear the environment.
+
+Subprocesses are going to see outdated variables, in disagreement with the current process.
+Use os.environ.clear() or the env= argument to Popen.
+
+See Also:
+* os.environ.clear
+* Popen
+* Bugbear B003 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

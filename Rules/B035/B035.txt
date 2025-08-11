@@ -1,0 +1,6 @@
+B035: Found dict comprehension with a static key - either a constant value or variable not from the comprehension expression.
+
+This will result in a dict with a single key that was repeatedly overwritten.
+
+See Also:
+* Bugbear B035 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

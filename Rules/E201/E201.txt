@@ -1,0 +1,5 @@
+E201: Whitespace after '
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#pet-peeves

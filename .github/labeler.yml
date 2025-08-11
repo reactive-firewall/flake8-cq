@@ -38,6 +38,8 @@ documentation:
       - './**/*.md'
       - docs/**/*
       - docs/*
+      - 'Rules/**/*.md'
+      - 'Rules/**/*.txt'
 
 # Add 'test' label
 Testing:

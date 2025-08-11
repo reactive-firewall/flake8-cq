@@ -86,6 +86,7 @@ import json
 import platform
 import sarif_om as sarif
 import datetime
+import requests
 from typing import Dict, List, Optional
 from urllib.parse import quote
 import flake8
@@ -93,6 +94,10 @@ import flake8
 class Flake8LintCLI:
 	SARIF_SCHEMA_URL = str(
 		"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/refs/heads/main/sarif-2.1/schema/sarif-schema-2.1.0.json"
+	)
+
+	FLAKE8_RULES_BASE_URL = str(
+		"https://raw.githubusercontent.com/reactive-firewall/flake8-cq/master/Rules"
 	)
 
 	FLAKE8_VERSION_STR = flk8_ver = f"{flake8.__version_info__[0]}.{flake8.__version_info__[1]}.{flake8.__version_info__[2]}"
@@ -119,7 +124,7 @@ class Flake8LintCLI:
 		# self.severity = severity
 		self.files = files
 		self.config = config if config else None
-		self.rule_docs_cache: Dict[str, str] = {}
+		self.rule_docs_cache: Dict[str, Dict[str, str, str]] = {}
 		self.command = None
 		self.start_time = None
 		self.end_time = None
@@ -136,7 +141,7 @@ class Flake8LintCLI:
 		] + self.files
 		try:
 			self.start_time = str(datetime.datetime.now(datetime.UTC))
-			result = subprocess.run(self.command, capture_output=True, text=True, check=True)  # nosec B404,B603
+			result = subprocess.run(self.command, input=None, capture_output=True, text=True, check=True)  # nosec B404,B603
 			self.execution_successful = True
 			self.end_time = str(datetime.datetime.now(datetime.UTC))
 			return json.loads(result.stdout)
@@ -261,25 +266,73 @@ class Flake8LintCLI:
 		"""Yields the kind of result from the given code."""
 		if not code:
 			return "notApplicable"
-		elif ("W" in code.upper()) or ("E" in code.upper()):
+		elif ("E2" in code.upper()) or ("E3" in code.upper()) or ("VNE0" in code.upper()):
 			return "fail"
-		elif ("D" in code.upper()) or ("C" in code.upper()) or ("B" in code.upper()):
+		elif ("AAA99" in code.upper()) or ("E999" in code.upper()):
+			return "notApplicable"  # bugs in linter are exempt
+		elif ("F" in code.upper()) or ("D" in code.upper()) or ("C" in code.upper()) or ("B" in code.upper()):
 			return "review"
 		else:
 			return "informational"
 
 	def triage_code(self, code: str) -> str:
 		"Yields the severity of the given code."
-		if not code:
-			return "none"
-		elif ("S" in code.upper()) or ("E" in code.upper()):
-			return "error"
-		elif ("W" in code.upper()) or ("C" in code.upper()) or ("B" in code.upper()):
-			return "warning"
-		elif ("D" in code.upper()) or ("N" in code.upper()) or ("F" in code.upper()):
-			return "note"
-		else:
-			return "none"
+		if code:
+			# use set for "or"-chains of conditions
+			severity_map = {
+				"error": {"E2", "E3", "E9", "VNE0"},
+				"warning": {"W", "E", "C", "B"},
+				"note": {"AAA", "D", "N", "F", "SIM"}
+			}
+			# keep logic straight forward
+			code_upper = code.upper()
+			# use loop for nested sets of conditions instead of "or"-chains
+			for severity, codes in severity_map.items():
+				if any(code in code_upper for code in codes):
+					return severity
+		# default
+		return "none"
+
+	def fetch_rule_description(self, code, timeout=5) -> Dict[str, str]:
+		"""Fetches the plain text and markdown descriptions for a given rule code."""
+		txt_url = f"{self.FLAKE8_RULES_BASE_URL}/{code}/{code}.txt"
+		md_url = f"{self.FLAKE8_RULES_BASE_URL}/{code}/{code}.md"
+
+		descriptions = {
+			'text': None,
+			"markdown": None,
+			"url": self.FLAKE8_RULES_BASE_URL,
+		}
+
+		# Fetch plain text description
+		try:
+			response = requests.get(txt_url, timeout=timeout)
+			response.raise_for_status()  # Raise an error for bad responses
+			_content_type = response.headers.get("Content-Type", "")
+			if content_type.startswith("text/plain"):
+				descriptions['text'] = response.text.strip()
+				descriptions["url"] = txt_url
+			else:
+				# skip processing
+				raise requests.RequestException(response)
+		except requests.RequestException:
+			pass  # Handle error silently, fallback to existing description
+
+		# Fetch markdown description
+		try:
+			response = requests.get(md_url, timeout=timeout)
+			response.raise_for_status()
+			_content_type = response.headers.get("Content-Type", "")
+			if content_type.startswith("text/plain"):
+				descriptions["markdown"] = response.text.strip()
+				descriptions["url"] = md_url
+			else:
+				# skip processing
+				raise requests.RequestException(response)
+		except requests.RequestException:
+			pass  # Handle error silently, fallback to existing description
+
+		return descriptions
 
 	def convert_to_sarif(self, flake8_results):
 		"""Convert flake8 JSON results to SARIF format using sarif-om."""
@@ -298,7 +351,7 @@ class Flake8LintCLI:
 					artifacts=[],
 					results=[],
 					invocations=[self.create_invocation()],
-					default_source_language="python"
+					default_source_language="python",
 				)
 			]
 		)
@@ -306,32 +359,58 @@ class Flake8LintCLI:
 		run = sarif_log.runs[0]
 		driver = run.tool.driver
 		rule_ids = {}
+		artifact_uris = set()
+		artifact_index_mark = 0
 
-		for file_uri, violations in flake8_results.items():
-			if file_uri not in [artifact.location.uri for artifact in run.artifacts]:
-					run.artifacts.append(sarif.Artifact(
-						roles=["analysisTarget", "referencedOnCommandLine"],
-						location=sarif.ArtifactLocation(index=len(run.artifacts), uri=file_uri),
-						source_language="python"
-					))
+		for raw_file_uri, violations in flake8_results.items():
+
+			# Normalize file path
+			file_uri = os.path.normpath(raw_file_uri).replace(os.sep, '/')
+
+			# Add unique artifacts
+			if file_uri and file_uri not in artifact_uris:
+				artifact_uris.add(file_uri)
+				run.artifacts.append(sarif.Artifact(
+					roles=["analysisTarget", "referencedOnCommandLine"],
+					location=sarif.ArtifactLocation(index=artifact_index_mark, uri=file_uri),
+					source_language="python"
+				))
+				artifact_index_mark += 1
+
 			for entry in violations:
 				code = entry.get('code', '')
 
 				if code not in rule_ids:
+					descriptions = self.fetch_rule_description(code)
+					if descriptions['text']:
+						short_description_text = descriptions['text'].splitlines()[0] if len(descriptions['text'].splitlines()) > 0 else entry.get('text', '')
+						full_description_text = descriptions['text']
+					else:
+						short_description_text = entry.get('text', '')
+						full_description_text = entry.get('text', '')
+					if descriptions["markdown"]:
+						short_description_markdown = descriptions["markdown"].splitlines()[0] if len(descriptions["markdown"].splitlines()) > 0 else ""
+						full_description_markdown = descriptions["markdown"]
+					else:
+						short_description_markdown = ""
+						full_description_markdown = ""
+					# MIT code-listing for now
+					help_url = descriptions["url"] if descriptions["url"] else f"https://flakes.orsinium.dev/#{code}"
 					rule = sarif.ReportingDescriptor(
 						id=code,
 						name=code,
 						short_description=sarif.MultiformatMessageString(
-							text=entry.get('text', '')
+							text=short_description_text,
+							markdown=short_description_markdown,
 						),
 						full_description=sarif.MultiformatMessageString(
-							text=entry.get('text', '')
+							text=full_description_text,
+							markdown=full_description_markdown,
 						),
-						# MIT code-listing for now
-						help_uri=f"https://flakes.orsinium.dev/#{code}",
+						help_uri=help_url,
 						help=sarif.MultiformatMessageString(
-							text=entry.get('text', '')
-						)
+							text=full_description_text,
+						),
 					)
 					driver.rules.append(rule)
 					rule_ids[code] = rule
@@ -340,7 +419,7 @@ class Flake8LintCLI:
 					rule_id=code,
 					rule_index=next((i for i, deRule in enumerate(driver.rules) if deRule == rule), None),
 					message=sarif.Message(
-						text=entry.get('text', '')
+						text=entry.get('text', f"Detected {code}.")
 					),
 					kind=self.grade_code(code),
 					level=self.triage_code(code),
@@ -475,7 +554,7 @@ def main():
 	parser = argparse.ArgumentParser(description="Run flake8 and output results in SARIF format.")
 	parser.add_argument("--output", default="flake8.sarif",
 		help="Specify the output SARIF file name.")
-	parser.add_argument("--config", required=False, default="**/.flake8.ini",
+	parser.add_argument("--config", required=False,
 		help="Specify the Flake8 config file name.")
 	parser.add_argument("FILES", nargs='+', help="One or more files or glob patterns to check.")
 
@@ -488,6 +567,7 @@ def main():
 		cli_tool.write_sarif(args.output, sarif_log)
 	except Exception as e:
 		print(f"::error file={__file__},title='Error while serializing results':: {e}")
+
 
 if __name__ == "__main__":
 	main()

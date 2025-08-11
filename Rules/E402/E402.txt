@@ -1,0 +1,5 @@
+E402: Module level import not at top of file
+
+See Also:
+
+  - https://www.python.org/dev/peps/pep-0008/#imports

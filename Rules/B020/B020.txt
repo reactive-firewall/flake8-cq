@@ -1,0 +1,4 @@
+B020: Loop control variable overrides iterable it iterates.
+
+See Also:
+* Bugbear B020 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

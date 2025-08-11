@@ -1,0 +1,6 @@
+B033: Sets should not contain duplicate items.
+
+Duplicate items will be replaced with a single item at runtime.
+
+See Also:
+* Bugbear B033 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

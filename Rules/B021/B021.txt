@@ -1,0 +1,6 @@
+B021: f-string used as docstring.
+
+This will be interpreted by python as a joined string rather than a docstring.
+
+See Also:
+* Bugbear B021 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file
