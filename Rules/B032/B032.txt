@@ -1,0 +1,6 @@
+B032: Possible unintentional type annotation (using ':').
+
+Did you mean to assign (using '=')?
+
+See Also:
+* Bugbear B032 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

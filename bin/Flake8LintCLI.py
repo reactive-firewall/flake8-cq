@@ -266,7 +266,7 @@ class Flake8LintCLI:
 		"""Yields the kind of result from the given code."""
 		if not code:
 			return "notApplicable"
-		elif ("S" in code.upper()) or ("E2" in code.upper()) or ("VNE0" in code.upper()):
+		elif ("E2" in code.upper()) or ("E3" in code.upper()) or ("VNE0" in code.upper()):
 			return "fail"
 		elif ("AAA99" in code.upper()) or ("E999" in code.upper()):
 			return "notApplicable"  # bugs in linter are exempt
@@ -280,9 +280,9 @@ class Flake8LintCLI:
 		if code:
 			# use set for "or"-chains of conditions
 			severity_map = {
-				"error": {"S", "E2", "E3", "E9"},
+				"error": {"E2", "E3", "E9", "VNE0"},
 				"warning": {"W", "E", "C", "B"},
-				"note": {"D", "N", "F"}
+				"note": {"AAA", "D", "N", "F", "SIM"}
 			}
 			# keep logic straight forward
 			code_upper = code.upper()

@@ -1,0 +1,6 @@
+B031: Using the generator returned from itertools.groupby() more than once will do nothing on the second usage.
+
+Save the result to a list if the result is needed multiple times.
+
+See Also:
+* Bugbear B031 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

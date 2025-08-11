@@ -1,0 +1,4 @@
+B910: Use Counter() instead of defaultdict(int) to avoid excessive memory use as the default dict will record missing keys with the default value when accessed.
+
+See Also:
+* Bugbear B910 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

@@ -1,0 +1,6 @@
+B011: Do not call assert False since python -O removes these calls.
+
+Instead callers should raise AssertionError().
+
+See Also:
+* Bugbear B011 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

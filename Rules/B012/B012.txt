@@ -1,0 +1,7 @@
+B012: Use of break, continue or return inside finally blocks will silence exceptions or override return values from the try or except blocks.
+
+To silence an exception, do it explicitly in the except block. To properly use a break,
+continue or return refactor your code so these statements are not in the finally block.
+
+See Also:
+* Bugbear B012 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

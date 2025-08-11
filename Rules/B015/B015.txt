@@ -1,0 +1,6 @@
+B015: Pointless comparison.
+
+This comparison does nothing but waste CPU instructions. Either prepend assert or remove it.
+
+See Also:
+* Bugbear B015 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file

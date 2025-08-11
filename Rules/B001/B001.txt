@@ -1,0 +1,11 @@
+B001: Do not use bare 'except:'.
+
+Do not use bare except:, it also catches unexpected events like memory errors, interrupts,
+system exit, and so on. Prefer 'except Exception:'.
+
+If you're sure what you're doing, be explicit and write 'except BaseException:'.
+Disable E722 to avoid duplicate warnings.
+
+See Also:
+* Python except clause - https://docs.python.org/3/reference/compound_stmts.html#except
+* Bugbear B001 - https://github.com/PyCQA/flake8-bugbear?tab=readme-ov-file
