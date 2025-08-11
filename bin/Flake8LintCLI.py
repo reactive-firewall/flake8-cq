@@ -309,7 +309,7 @@ class Flake8LintCLI:
 			response = requests.get(txt_url, timeout=timeout)
 			response.raise_for_status()  # Raise an error for bad responses
 			_content_type = response.headers.get("Content-Type", "")
-			if content_type.startswith("text/plain"):
+			if _content_type.startswith("text/plain"):
 				descriptions['text'] = response.text.strip()
 				descriptions["url"] = txt_url
 			else:
@@ -323,7 +323,7 @@ class Flake8LintCLI:
 			response = requests.get(md_url, timeout=timeout)
 			response.raise_for_status()
 			_content_type = response.headers.get("Content-Type", "")
-			if content_type.startswith("text/plain"):
+			if _content_type.startswith("text/plain"):
 				descriptions["markdown"] = response.text.strip()
 				descriptions["url"] = md_url
 			else:
