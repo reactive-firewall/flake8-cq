@@ -137,3 +137,13 @@ runs:
       with:
         sarif_file: flake8.sarif
       if: ${{ !cancelled() }}
+
+    - name: "Clean-up Flake8 Scan Artifacts"
+      shell: bash
+      run: |
+        printf "%s\n" "::group::clean-up"
+        if [[ ( -f "flake8.sarif" ) ]] ; then
+          rm -f "flake8.sarif" 2>/dev/null || true ;
+        fi ;
+        printf "%s\n" "::endgroup::"
+      if: ${{ !cancelled() }}
