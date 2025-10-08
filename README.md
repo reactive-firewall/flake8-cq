@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run flake8-cq
         uses: reactive-firewall/flake8-cq@master
@@ -73,14 +73,14 @@ on:
 jobs:
   flake8-lint:
     permissions:
-      contents: read  # used by actions/checkout and reactive-firewall/flake8-cq to read your code.
+      contents: read  # used by actions/checkout and reactive-firewall/flake8-cq to scan your code.
       security-events: write  # used by reactive-firewall/flake8-cq to upload (via github/codeql-action/upload-sarif) the results to GitHub.
-      statuses: write  # OPTIONAL used to update check-status on workflow re-runs (should not be needed for initial status)
+      statuses: write  # OPTIONAL used to update check-status on workflow re-runs
       pull-requests: read  # OPTIONAL used to read pull-request metadata
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run flake8-cq
         uses: reactive-firewall/flake8-cq@master
