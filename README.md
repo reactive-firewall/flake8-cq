@@ -48,10 +48,10 @@ jobs:
   * `path`: The path to the directory containing your Python code.
     **Default** is to use `git` to `match` paths.
   * `match`: The glob pattern to match Python files (e.g., `*.py`).
-    Only works with `git` tracked files. _Overriden_ by setting a value for `path`.
+    Only works with `git` tracked files. _Overridden_ by setting a value for `path`.
 
 > [!TIP]
-> The `path` input can be used to scan files not traked by
+> The `path` input can be used to scan files not tracked by
 > git (e.g. downloaded tools and build artifacts in the given `path`).
 
 ### Full Example
