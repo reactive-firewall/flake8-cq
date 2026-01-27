@@ -5,4 +5,4 @@ flake8-json>=24.4.0
 # sarif-om - MIT License
 sarif-om>=1.0.4
 # requests - Apache-2.0 Software License
-requests>=2.32.4
+requests>=2.32.5
