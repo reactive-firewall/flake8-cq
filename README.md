@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Run flake8-cq
         uses: reactive-firewall/flake8-cq@master
@@ -42,7 +42,7 @@ jobs:
 
 ## Configuration
 
-### inputs
+### Inputs
 
   * `config`: The file or _glob_ to slurp up `flake8` configuration from. **Default** is `UNDEFINED`.
   * `path`: The path to the directory containing your Python code.
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Run flake8-cq
         uses: reactive-firewall/flake8-cq@master
